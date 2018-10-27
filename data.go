@@ -19,8 +19,6 @@ func returnGedung(w http.ResponseWriter, r *http.Request) {
 		log.Print(err)
 	}
 
-	log.Println(rows)
-
 	for rows.Next() {
 		if err := rows.Scan(&gedung.Id, &gedung.Nama); err != nil {
 			log.Fatal(err.Error())
@@ -29,9 +27,38 @@ func returnGedung(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	response.Status = 1
+	response.Status = 200
 	response.Message = "OK"
 	response.Data = arr_gedung
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func returnKendaraan(w http.ResponseWriter, h *http.Request) {
+	var kendaraan Kendaraan
+	var arr_kendaraan []Kendaraan
+	var response ResponseKendaraan
+
+	db := connect()
+	defer db.Close()
+
+	rows, err := db.Query("SELECT * FROM kendaraan")
+	if err != nil {
+		log.Print(err)
+	}
+
+	for rows.Next() {
+		if err := rows.Scan(&kendaraan.Id, &kendaraan.Plat_nomor); err != nil {
+			log.Fatal(err.Error())
+		} else {
+			arr_kendaraan = append(arr_kendaraan, kendaraan)
+		}
+	}
+
+	response.Status = 200
+	response.Message = "OK"
+	response.Data = arr_kendaraan
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
