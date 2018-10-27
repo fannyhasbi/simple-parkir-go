@@ -63,3 +63,34 @@ func returnKendaraan(w http.ResponseWriter, h *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
 }
+
+func returnPetugas(w http.ResponseWriter, r *http.Request) {
+	var petugas Petugas
+	var arr_petugas []Petugas
+	var response ResponsePetugas
+
+	db := connect()
+	defer db.Close()
+
+	rows, err := db.Query("SELECT id, nama FROM petugas")
+	if err != nil {
+		log.Println("2")
+		log.Print(err)
+	}
+
+	for rows.Next() {
+		if err := rows.Scan(&petugas.Id, &petugas.Nama); err != nil {
+			log.Println("2")
+			log.Fatal(err.Error())
+		} else {
+			arr_petugas = append(arr_petugas, petugas)
+		}
+	}
+
+	response.Status = 200
+	response.Message = "OK"
+	response.Data = arr_petugas
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}

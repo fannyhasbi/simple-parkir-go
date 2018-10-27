@@ -13,6 +13,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/gedung", returnGedung).Methods("GET")
 	router.HandleFunc("/kendaraan", returnKendaraan).Methods("GET")
+	router.HandleFunc("/petugas", returnPetugas).Methods("GET")
 
 	http.Handle("/", router)
 

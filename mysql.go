@@ -12,7 +12,5 @@ func connect() *sql.DB {
 		log.Fatal(err)
 	}
 
-	log.Println(db)
-
 	return db
 }
