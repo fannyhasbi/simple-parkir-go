@@ -2,22 +2,18 @@ package main
 
 import (
   "fmt"
+  "log"
   "net/http"
+
+  _ "github.com/go-sql-driver/mysql"
+  "github.com/gorilla/mux"
 )
 
-func handleWriter(w http.ResponseWriter, r *http.Request){
-  var message = "Welcome to Parking System"
-  w.Write([]byte(message))
-}
-
 func main(){
-  http.HandleFunc("/", handleWriter)
-
-  var address = "localhost:4040"
-  fmt.Printf("Server running on %s", address)
-  err := http.ListenAndServe(address, nil)
-
-  if err != nil {
-    fmt.Println(err.Error())
-  }
+  router := mux.NewRouter()
+  router.HandleFunc("/gedung", returnGedung).Methods("GET")
+  http.Handle("/", router)
+  fmt.Println("Running on port 4040")
+  log.Fatal(http.ListenAndServe(":4040", router))
 }
+
