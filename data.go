@@ -129,7 +129,7 @@ func returnLoginPetugas(w http.ResponseWriter, r *http.Request) {
 }
 
 func returnKendaraanMasuk(w http.ResponseWriter, r *http.Request) {
-	var response ResponseKendaraanMasuk
+	var response ResponseKendaraanActivity
 
 	id_petugas := r.FormValue("id_petugas")
 	id_kendaraan := r.FormValue("id_kendaraan")
@@ -139,7 +139,7 @@ func returnKendaraanMasuk(w http.ResponseWriter, r *http.Request) {
 
 	_, err := db.Exec("INSERT INTO kendaraan_masuk (id_petugas, id_kendaraan) VALUES (?, ?)", id_petugas, id_kendaraan)
 	if err != nil {
-		http.Error(w, "Server error, unable to insert data", 500)
+		log.Println(err.Error())
 		return
 	}
 
@@ -149,5 +149,27 @@ func returnKendaraanMasuk(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
 
+func returnKendaraanKeluar(w http.ResponseWriter, r *http.Request) {
+	var response ResponseKendaraanActivity
+
+	id_petugas := r.FormValue("id_petugas")
+	id_kendaraan := r.FormValue("id_kendaraan")
+
+	db := connect()
+	defer db.Close()
+
+	_, err := db.Exec("INSERT INTO kendaraan_keluar (id_petugas, id_kendaraan) VALUES (?, ?)", id_petugas, id_kendaraan)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
+	response.Status = 200
+	response.Message = "OK"
+	response.Data = "Insert successful"
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }

@@ -21,6 +21,7 @@ func main() {
 
 	// kendaraan activity
 	router.HandleFunc("/kendaraan-masuk", returnKendaraanMasuk).Methods("POST")
+	router.HandleFunc("/kendaraan-keluar", returnKendaraanKeluar).Methods("POST")
 
 	http.Handle("/", router)
 

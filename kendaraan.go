@@ -11,7 +11,7 @@ type ResponseKendaraan struct {
 	Data    []Kendaraan `json:"data"`
 }
 
-type ResponseKendaraanMasuk struct {
+type ResponseKendaraanActivity struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
 	Data    string `json:"data"`
