@@ -11,9 +11,17 @@ import (
 
 func main() {
 	router := mux.NewRouter()
+
 	router.HandleFunc("/gedung", returnGedung).Methods("GET")
 	router.HandleFunc("/kendaraan", returnKendaraan).Methods("GET")
+
+	// petugas
 	router.HandleFunc("/petugas", returnPetugas).Methods("GET")
+	router.HandleFunc("/petugas", returnLoginPetugas).Methods("POST")
+
+	// kendaraan activity
+	router.HandleFunc("/kendaraan-masuk", returnKendaraanMasuk).Methods("POST")
+	router.HandleFunc("/kendaraan-keluar", returnKendaraanKeluar).Methods("POST")
 
 	http.Handle("/", router)
 

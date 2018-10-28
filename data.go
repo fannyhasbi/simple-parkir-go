@@ -74,13 +74,11 @@ func returnPetugas(w http.ResponseWriter, r *http.Request) {
 
 	rows, err := db.Query("SELECT id, nama FROM petugas")
 	if err != nil {
-		log.Println("2")
 		log.Print(err)
 	}
 
 	for rows.Next() {
 		if err := rows.Scan(&petugas.Id, &petugas.Nama); err != nil {
-			log.Println("2")
 			log.Fatal(err.Error())
 		} else {
 			arr_petugas = append(arr_petugas, petugas)
@@ -90,6 +88,87 @@ func returnPetugas(w http.ResponseWriter, r *http.Request) {
 	response.Status = 200
 	response.Message = "OK"
 	response.Data = arr_petugas
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func returnLoginPetugas(w http.ResponseWriter, r *http.Request) {
+	var petugas LoginPetugas
+	var response ResponseLoginPetugas
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	db := connect()
+	defer db.Close()
+
+	err := db.QueryRow("SELECT id, username, password, nama FROM petugas WHERE username = ?", username).Scan(&petugas.Id, &petugas.Username, &petugas.Password, &petugas.Nama)
+
+	if petugas.Password == password {
+		response.Status = 401
+		response.Message = "Unauthorized"
+		response.Data = ""
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	} else {
+		if err != nil {
+			response.Status = 401
+			response.Message = "Unauthorized"
+			response.Data = ""
+		} else {
+			response.Status = 200
+			response.Message = "OK"
+			response.Data = petugas.Nama
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	}
+}
+
+func returnKendaraanMasuk(w http.ResponseWriter, r *http.Request) {
+	var response ResponseKendaraanActivity
+
+	id_petugas := r.FormValue("id_petugas")
+	id_kendaraan := r.FormValue("id_kendaraan")
+
+	db := connect()
+	defer db.Close()
+
+	_, err := db.Exec("INSERT INTO kendaraan_masuk (id_petugas, id_kendaraan) VALUES (?, ?)", id_petugas, id_kendaraan)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
+	response.Status = 200
+	response.Message = "OK"
+	response.Data = "Insert successful"
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func returnKendaraanKeluar(w http.ResponseWriter, r *http.Request) {
+	var response ResponseKendaraanActivity
+
+	id_petugas := r.FormValue("id_petugas")
+	id_kendaraan := r.FormValue("id_kendaraan")
+
+	db := connect()
+	defer db.Close()
+
+	_, err := db.Exec("INSERT INTO kendaraan_keluar (id_petugas, id_kendaraan) VALUES (?, ?)", id_petugas, id_kendaraan)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
+	response.Status = 200
+	response.Message = "OK"
+	response.Data = "Insert successful"
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)

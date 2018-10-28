@@ -28,4 +28,30 @@ CREATE TABLE petugas (
 
 INSERT INTO petugas (username, password, nama) VALUES
 ("fannyhasbi", "hasbi12345", "Fanny Hasbi"),
-("someone", "someone", "Someone Amazin");
+("someone", "someone", "Someone Amazing");
+
+CREATE TABLE kendaraan_masuk (
+  id INT NOT NULL AUTO_INCREMENT,
+  waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id_petugas INT NOT NULL,
+  id_kendaraan INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_petugas) REFERENCES petugas(id),
+  FOREIGN KEY (id_kendaraan) REFERENCES kendaraan(id)
+);
+
+INSERT INTO kendaraan_masuk (id_petugas, id_kendaraan) VALUES
+(1, 1), (1, 2);
+
+CREATE TABLE kendaraan_keluar (
+  id INT NOT NULL AUTO_INCREMENT,
+  waktu TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  id_petugas INT NOT NULL,
+  id_kendaraan INT NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_petugas) REFERENCES petugas(id),
+  FOREIGN KEY (id_kendaraan) REFERENCES kendaraan(id)
+);
+
+INSERT INTO kendaraan_keluar (id_petugas, id_kendaraan) VALUES
+(2, 1), (2, 2);
