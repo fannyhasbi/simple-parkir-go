@@ -19,6 +19,9 @@ func main() {
 	router.HandleFunc("/petugas", returnPetugas).Methods("GET")
 	router.HandleFunc("/petugas", returnLoginPetugas).Methods("POST")
 
+	// kendaraan activity
+	router.HandleFunc("/kendaraan-masuk", returnKendaraanMasuk).Methods("POST")
+
 	http.Handle("/", router)
 
 	fmt.Println("Running on port 4040")
