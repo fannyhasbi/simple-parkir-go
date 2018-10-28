@@ -28,4 +28,4 @@ CREATE TABLE petugas (
 
 INSERT INTO petugas (username, password, nama) VALUES
 ("fannyhasbi", "hasbi12345", "Fanny Hasbi"),
-("someone", "someone", "Someone Amazin");
+("someone", "someone", "Someone Amazing");

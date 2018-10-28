@@ -74,13 +74,11 @@ func returnPetugas(w http.ResponseWriter, r *http.Request) {
 
 	rows, err := db.Query("SELECT id, nama FROM petugas")
 	if err != nil {
-		log.Println("2")
 		log.Print(err)
 	}
 
 	for rows.Next() {
 		if err := rows.Scan(&petugas.Id, &petugas.Nama); err != nil {
-			log.Println("2")
 			log.Fatal(err.Error())
 		} else {
 			arr_petugas = append(arr_petugas, petugas)
@@ -93,4 +91,39 @@ func returnPetugas(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(response)
+}
+
+func returnLoginPetugas(w http.ResponseWriter, r *http.Request) {
+	var petugas LoginPetugas
+	var response ResponseLoginPetugas
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	db := connect()
+	defer db.Close()
+
+	err := db.QueryRow("SELECT id, username, password, nama FROM petugas WHERE username = ?", username).Scan(&petugas.Id, &petugas.Username, &petugas.Password, &petugas.Nama)
+
+	if petugas.Password == password {
+		response.Status = 401
+		response.Message = "Unauthorized"
+		response.Data = ""
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	} else {
+		if err != nil {
+			response.Status = 401
+			response.Message = "Unauthorized"
+			response.Data = ""
+		} else {
+			response.Status = 200
+			response.Message = "OK"
+			response.Data = petugas.Nama
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	}
 }
